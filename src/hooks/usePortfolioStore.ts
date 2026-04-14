@@ -1,16 +1,4 @@
 import { useState, useEffect } from "react";
-import { 
-  collection, 
-  onSnapshot, 
-  addDoc, 
-  deleteDoc, 
-  doc, 
-  setDoc, 
-  query, 
-  orderBy,
-  getDoc
-} from "firebase/firestore";
-import { db } from "../lib/firebase";
 
 export interface WorkItem {
   id: string;
@@ -33,129 +21,98 @@ const DEFAULT_WORKS: WorkItem[] = [
 ];
 
 export function usePortfolioStore() {
-  const [works, setWorks] = useState<WorkItem[]>([]);
-  const [vinylAsset, setVinylAsset] = useState("https://www.transparenttextures.com/patterns/plastic-wrap.png");
-  const [tapeAsset, setTapeAsset] = useState("");
-  const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop");
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [gradProjPosts, setGradProjPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [works, setWorks] = useState<WorkItem[]>(() => {
+    const saved = localStorage.getItem("portfolio_works");
+    return saved ? JSON.parse(saved) : DEFAULT_WORKS;
+  });
+
+  const [vinylAsset, setVinylAsset] = useState<string>(() => {
+    return localStorage.getItem("portfolio_vinyl") || "https://www.transparenttextures.com/patterns/plastic-wrap.png";
+  });
+
+  const [tapeAsset, setTapeAsset] = useState<string>(() => {
+    return localStorage.getItem("portfolio_tape") || "";
+  });
+
+  const [profileImage, setProfileImage] = useState<string>(() => {
+    return localStorage.getItem("portfolio_profile") || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop";
+  });
+
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => {
+    const saved = localStorage.getItem("portfolio_blog");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const [gradProjPosts, setGradProjPosts] = useState<BlogPost[]>(() => {
+    const saved = localStorage.getItem("portfolio_gradproj");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
-    // Sync Settings
-    const unsubSettings = onSnapshot(doc(db, "settings", "global"), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data.vinylAsset) setVinylAsset(data.vinylAsset);
-        if (data.tapeAsset) setTapeAsset(data.tapeAsset);
-        if (data.profileImage) setProfileImage(data.profileImage);
-      }
-    });
+    localStorage.setItem("portfolio_works", JSON.stringify(works));
+  }, [works]);
 
-    // Sync Works
-    const qWorks = query(collection(db, "works"), orderBy("createdAt", "desc"));
-    const unsubWorks = onSnapshot(qWorks, (snapshot) => {
-      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as WorkItem));
-      setWorks(items.length > 0 ? items : DEFAULT_WORKS);
-    });
+  useEffect(() => {
+    localStorage.setItem("portfolio_vinyl", vinylAsset);
+  }, [vinylAsset]);
 
-    // Sync Blog
-    const qBlog = query(collection(db, "blog"), orderBy("createdAt", "desc"));
-    const unsubBlog = onSnapshot(qBlog, (snapshot) => {
-      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as BlogPost));
-      setBlogPosts(items);
-    });
+  useEffect(() => {
+    localStorage.setItem("portfolio_tape", tapeAsset);
+  }, [tapeAsset]);
 
-    // Sync GradProj
-    const qGrad = query(collection(db, "gradproj"), orderBy("createdAt", "desc"));
-    const unsubGrad = onSnapshot(qGrad, (snapshot) => {
-      const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as BlogPost));
-      setGradProjPosts(items);
-      setLoading(false);
-    });
+  useEffect(() => {
+    localStorage.setItem("portfolio_profile", profileImage);
+  }, [profileImage]);
 
-    return () => {
-      unsubSettings();
-      unsubWorks();
-      unsubBlog();
-      unsubGrad();
+  useEffect(() => {
+    localStorage.setItem("portfolio_blog", JSON.stringify(blogPosts));
+  }, [blogPosts]);
+
+  useEffect(() => {
+    localStorage.setItem("portfolio_gradproj", JSON.stringify(gradProjPosts));
+  }, [gradProjPosts]);
+
+  const addWork = (work: Omit<WorkItem, "id">) => {
+    const newWork = { ...work, id: Date.now().toString() };
+    setWorks((prev) => [newWork, ...prev]);
+  };
+
+  const deleteWork = (id: string) => {
+    setWorks((prev) => prev.filter((w) => w.id !== id));
+  };
+
+  const addBlogPost = (post: Omit<BlogPost, "id" | "date">) => {
+    const newPost = { 
+      ...post, 
+      id: Date.now().toString(),
+      date: new Date().toLocaleDateString()
     };
-  }, []);
-
-  const updateSettings = async (updates: Partial<{ vinylAsset: string; tapeAsset: string; profileImage: string }>) => {
-    try {
-      await setDoc(doc(db, "settings", "global"), updates, { merge: true });
-    } catch (error) {
-      console.error("Error updating settings:", error);
-    }
+    setBlogPosts((prev) => [newPost, ...prev]);
   };
 
-  const addWork = async (work: Omit<WorkItem, "id">) => {
-    try {
-      await addDoc(collection(db, "works"), {
-        ...work,
-        createdAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Error adding work:", error);
-    }
+  const deleteBlogPost = (id: string) => {
+    setBlogPosts((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const deleteWork = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "works", id));
-    } catch (error) {
-      console.error("Error deleting work:", error);
-    }
+  const addGradProjPost = (post: Omit<BlogPost, "id" | "date">) => {
+    const newPost = { 
+      ...post, 
+      id: Date.now().toString(),
+      date: new Date().toLocaleDateString()
+    };
+    setGradProjPosts((prev) => [newPost, ...prev]);
   };
 
-  const addBlogPost = async (post: Omit<BlogPost, "id" | "date">) => {
-    try {
-      await addDoc(collection(db, "blog"), {
-        ...post,
-        date: new Date().toLocaleDateString(),
-        createdAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Error adding blog post:", error);
-    }
-  };
-
-  const deleteBlogPost = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "blog", id));
-    } catch (error) {
-      console.error("Error deleting blog post:", error);
-    }
-  };
-
-  const addGradProjPost = async (post: Omit<BlogPost, "id" | "date">) => {
-    try {
-      await addDoc(collection(db, "gradproj"), {
-        ...post,
-        date: new Date().toLocaleDateString(),
-        createdAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error("Error adding grad proj:", error);
-    }
-  };
-
-  const deleteGradProjPost = async (id: string) => {
-    try {
-      await deleteDoc(doc(db, "gradproj", id));
-    } catch (error) {
-      console.error("Error deleting grad proj:", error);
-    }
+  const deleteGradProjPost = (id: string) => {
+    setGradProjPosts((prev) => prev.filter((p) => p.id !== id));
   };
 
   return { 
     works, addWork, deleteWork, 
-    vinylAsset, setVinylAsset: (val: string) => updateSettings({ vinylAsset: val }), 
-    tapeAsset, setTapeAsset: (val: string) => updateSettings({ tapeAsset: val }),
-    profileImage, setProfileImage: (val: string) => updateSettings({ profileImage: val }),
+    vinylAsset, setVinylAsset, 
+    tapeAsset, setTapeAsset,
+    profileImage, setProfileImage,
     blogPosts, addBlogPost, deleteBlogPost,
-    gradProjPosts, addGradProjPost, deleteGradProjPost,
-    loading
+    gradProjPosts, addGradProjPost, deleteGradProjPost
   };
 }
