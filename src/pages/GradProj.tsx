@@ -9,15 +9,20 @@ interface GradWeek {
   images: string[];
 }
 
-const GRAD_WEEKS: GradWeek[] = Array.from({ length: 6 }, (_, i) => {
-  const weekNum = i + 1;
-  return {
-    id: weekNum,
-    title: `${weekNum}주차`,
-    description: `${weekNum}주차 진행 과정 및 결과물 아카이브입니다.`,
-    // Assuming up to 5 images per week, adjust as needed
-    images: Array.from({ length: 5 }, (_, j) => `/grad-proj/week${weekNum}/week${weekNum}_0${j + 1}.png`)
-  };
+const GRAD_WEEKS = [
+  { id: 1, title: "1주차", description: "1주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 13 },
+  { id: 2, title: "2주차", description: "2주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+  { id: 3, title: "3주차", description: "3주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+  { id: 4, title: "4주차", description: "4주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+  { id: 5, title: "5주차", description: "5주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+  { id: 6, title: "6주차", description: "6주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+];
+
+const getImages = (week: any) => 
+  Array.from({ length: week.imageCount }, (_, j) => {
+    const index = (j + 1).toString().padStart(2, '0');
+    return `/grad-proj/week${week.id}/week${week.id}_${index}.png`;
+  });
 });
 
 export default function GradProj() {
@@ -49,7 +54,7 @@ export default function GradProj() {
                   >
                     <div className="aspect-video bg-gray-100 rounded-3xl overflow-hidden mb-6 shadow-lg group-hover:shadow-2xl transition-all duration-500">
                       <img 
-                        src={week.images[0]} 
+                        src={getImages(week)[0]} 
                         alt={week.title} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         onError={(e) => {
