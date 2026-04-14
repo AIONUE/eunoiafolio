@@ -26,17 +26,9 @@ export function usePortfolioStore() {
     return saved ? JSON.parse(saved) : DEFAULT_WORKS;
   });
 
-  const [vinylAsset, setVinylAsset] = useState<string>(() => {
-    return localStorage.getItem("portfolio_vinyl") || "https://www.transparenttextures.com/patterns/plastic-wrap.png";
-  });
-
-  const [tapeAsset, setTapeAsset] = useState<string>(() => {
-    return localStorage.getItem("portfolio_tape") || "";
-  });
-
-  const [profileImage, setProfileImage] = useState<string>(() => {
-    return localStorage.getItem("portfolio_profile") || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop";
-  });
+  const [vinylAsset] = useState<string>("/plastic.png");
+  const [tapeAsset] = useState<string>("/tape.png");
+  const [profileImage] = useState<string>("/profile.jpg");
 
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => {
     const saved = localStorage.getItem("portfolio_blog");
@@ -51,18 +43,6 @@ export function usePortfolioStore() {
   useEffect(() => {
     localStorage.setItem("portfolio_works", JSON.stringify(works));
   }, [works]);
-
-  useEffect(() => {
-    localStorage.setItem("portfolio_vinyl", vinylAsset);
-  }, [vinylAsset]);
-
-  useEffect(() => {
-    localStorage.setItem("portfolio_tape", tapeAsset);
-  }, [tapeAsset]);
-
-  useEffect(() => {
-    localStorage.setItem("portfolio_profile", profileImage);
-  }, [profileImage]);
 
   useEffect(() => {
     localStorage.setItem("portfolio_blog", JSON.stringify(blogPosts));
@@ -109,9 +89,9 @@ export function usePortfolioStore() {
 
   return { 
     works, addWork, deleteWork, 
-    vinylAsset, setVinylAsset, 
-    tapeAsset, setTapeAsset,
-    profileImage, setProfileImage,
+    vinylAsset, 
+    tapeAsset,
+    profileImage,
     blogPosts, addBlogPost, deleteBlogPost,
     gradProjPosts, addGradProjPost, deleteGradProjPost
   };

@@ -20,9 +20,6 @@ export default function Admin() {
 
   const { 
     works, addWork, deleteWork, 
-    vinylAsset, setVinylAsset, 
-    tapeAsset, setTapeAsset,
-    profileImage, setProfileImage,
     blogPosts, addBlogPost, deleteBlogPost,
     gradProjPosts, addGradProjPost, deleteGradProjPost
   } = usePortfolioStore();
@@ -50,11 +47,6 @@ export default function Admin() {
     setNewTitle("");
     setNewImageUrl("");
     alert("업로드되었습니다!");
-  };
-
-  const handleAssetUpdate = (type: 'vinyl' | 'tape', value: string) => {
-    if (type === 'vinyl') setVinylAsset(value);
-    else setTapeAsset(value);
   };
 
   const handleBlogUpload = () => {
@@ -129,49 +121,6 @@ export default function Admin() {
           >
             LOGOUT
           </button>
-        </div>
-
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">
-          <h2 className="text-xl font-bold text-[#243397] mb-6">PROFILE IMAGE REGISTRATION</h2>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Profile Image URL</label>
-              <input 
-                type="text" 
-                value={profileImage}
-                onChange={(e) => setProfileImage(e.target.value)}
-                placeholder="https://..." 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397]"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">
-          <h2 className="text-xl font-bold text-[#243397] mb-6">HERO ASSETS REGISTRATION</h2>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Vinyl Texture URL</label>
-              <input 
-                type="text" 
-                value={vinylAsset}
-                onChange={(e) => handleAssetUpdate('vinyl', e.target.value)}
-                placeholder="https://..." 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Blue Tape Asset URL (Optional)</label>
-              <input 
-                type="text" 
-                value={tapeAsset}
-                onChange={(e) => handleAssetUpdate('tape', e.target.value)}
-                placeholder="https://..." 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397]"
-              />
-              <p className="text-xs text-gray-400 italic">If provided, this image will replace the CSS-based blue tapes.</p>
-            </div>
-          </div>
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">
