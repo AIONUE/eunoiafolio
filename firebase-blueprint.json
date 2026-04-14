@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "Settings": {
+      "title": "Settings",
+      "description": "Global application settings and assets",
+      "type": "object",
+      "properties": {
+        "vinylAsset": { "type": "string", "description": "URL for vinyl texture" },
+        "tapeAsset": { "type": "string", "description": "URL for blue tape asset" },
+        "profileImage": { "type": "string", "description": "URL for profile image" }
+      }
+    },
+    "Work": {
+      "title": "Work",
+      "description": "Portfolio work item",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "image": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "image"]
+    },
+    "BlogPost": {
+      "title": "BlogPost",
+      "description": "Blog post entry",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" },
+        "date": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content"]
+    },
+    "GradProj": {
+      "title": "GradProj",
+      "description": "Graduation project entry",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "image": { "type": "string" },
+        "date": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content"]
+    }
+  },
+  "firestore": {
+    "/settings/global": {
+      "schema": "Settings",
+      "description": "Global configuration"
+    },
+    "/works/{workId}": {
+      "schema": "Work",
+      "description": "Collection of works"
+    },
+    "/blog/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog posts"
+    },
+    "/gradproj/{postId}": {
+      "schema": "GradProj",
+      "description": "Collection of graduation projects"
+    }
+  }
+}

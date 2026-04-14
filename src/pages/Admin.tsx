@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { usePortfolioStore } from "@/src/hooks/usePortfolioStore";
+import { auth } from "../lib/firebase";
+import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 
 export default function Admin() {
-  const [password, setPassword] = useState("");
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [error, setError] = useState("");
+  const [user, setUser] = useState<any>(null);
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("WORK");
   const [newImageUrl, setNewImageUrl] = useState("");
@@ -27,14 +27,31 @@ export default function Admin() {
     gradProjPosts, addGradProjPost, deleteGradProjPost
   } = usePortfolioStore();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === "1111") {
-      setIsAuthorized(true);
-      setError("");
-    } else {
-      setError("비밀번호가 틀렸습니다.");
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      if (user && user.email === "wldms2418@sookmyung.ac.kr") {
+        setIsAuthorized(true);
+        setUser(user);
+      } else {
+        setIsAuthorized(false);
+        setUser(null);
+      }
+    });
+    return () => unsub();
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Login failed:", error);
+      alert("로그인에 실패했습니다.");
     }
+  };
+
+  const handleLogout = () => {
+    signOut(auth);
   };
 
   const handleUpload = () => {
@@ -92,27 +109,16 @@ export default function Admin() {
   if (!isAuthorized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
-          <h1 className="text-2xl font-bold text-[#243397] mb-6 text-center">ADMIN ACCESS</h1>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#243397] focus:border-transparent outline-none transition-all"
-                placeholder="Enter password"
-              />
-            </div>
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-            <button
-              type="submit"
-              className="w-full bg-[#243397] text-white py-2 rounded-lg font-bold hover:bg-[#243397]/90 transition-colors shadow-lg shadow-[#243397]/20"
-            >
-              LOGIN
-            </button>
-          </form>
+        <div className="max-w-md w-full bg-white p-12 rounded-[40px] shadow-2xl text-center space-y-8">
+          <h1 className="text-4xl font-black text-[#243397] tracking-tighter">ADMIN ACCESS</h1>
+          <p className="text-gray-500 font-medium">관리자 계정으로 로그인해주세요.</p>
+          <button 
+            onClick={handleGoogleLogin}
+            className="w-full bg-[#243397] text-white py-4 rounded-2xl font-bold hover:bg-[#243397]/90 transition-all flex items-center justify-center gap-3"
+          >
+            <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="" />
+            Google로 로그인
+          </button>
         </div>
       </div>
     );
@@ -123,12 +129,15 @@ export default function Admin() {
       <div className="max-w-5xl mx-auto">
         <div className="flex justify-between items-center mb-12">
           <h1 className="text-3xl font-bold text-[#243397]">ADMIN DASHBOARD</h1>
-          <button 
-            onClick={() => setIsAuthorized(false)}
-            className="text-gray-400 hover:text-red-500 font-medium transition-colors"
-          >
-            LOGOUT
-          </button>
+          <div className="flex items-center gap-4">
+            <span className="text-sm font-bold text-gray-500">{user?.email}</span>
+            <button 
+              onClick={handleLogout}
+              className="text-sm font-bold text-red-500 hover:underline"
+            >
+              LOGOUT
+            </button>
+          </div>
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">

@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    // Collection: settings
+    // Document: global
+    // Fields: vinylAsset, tapeAsset, profileImage
+    //
+    // Collection: works
+    // Fields: title, category, image, createdAt
+    //
+    // Collection: blog
+    // Fields: title, content, image, date, createdAt
+    //
+    // Collection: gradproj
+    // Fields: title, content, image, date, createdAt
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+             (request.auth.token.email == "wldms2418@sookmyung.ac.kr" && request.auth.token.email_verified == true);
+    }
+
+    match /settings/global {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /works/{workId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blog/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gradproj/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
