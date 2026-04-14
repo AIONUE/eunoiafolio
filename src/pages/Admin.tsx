@@ -44,9 +44,17 @@ export default function Admin() {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login failed:", error);
-      alert("로그인에 실패했습니다.");
+      let message = "로그인에 실패했습니다.";
+      if (error.code === 'auth/unauthorized-domain') {
+        message = "현재 도메인이 Firebase 승인 도메인에 등록되지 않았습니다. Firebase 콘솔에서 도메인을 추가해주세요.";
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        message = "로그인 팝업이 닫혔습니다. 다시 시도해주세요.";
+      } else {
+        message += ` (${error.code})`;
+      }
+      alert(message);
     }
   };
 
