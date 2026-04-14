@@ -9,16 +9,51 @@ interface GradWeek {
   images: string[];
 }
 
-const GRAD_WEEKS: GradWeek[] = Array.from({ length: 6 }, (_, i) => {
-  const weekNum = i + 1;
-  return {
-    id: weekNum,
-    title: `${weekNum}주차`,
-    description: `${weekNum}주차 진행 과정 및 결과물 아카이브입니다.`,
-    // Assuming up to 5 images per week, adjust as needed
-    images: Array.from({ length: 5 }, (_, j) => `/grad-proj/week${weekNum}/week${weekNum}_0${j + 1}.png`)
-  };
-});
+const generateImages = (weekNum: number, count: number) => {
+  return Array.from({ length: count }, (_, i) => {
+    const imgNum = (i + 1).toString().padStart(2, '0');
+    return `/grad-proj/week${weekNum}/week${weekNum}_${imgNum}.png`;
+  });
+};
+
+const GRAD_WEEKS: GradWeek[] = [
+  {
+    id: 1,
+    title: "1주차",
+    description: "1주차 프로젝트 기획 및 리서치 단계입니다.",
+    images: generateImages(1, 20)
+  },
+  {
+    id: 2,
+    title: "2주차",
+    description: "2주차 컨셉 도출 및 스케치 단계입니다.",
+    images: generateImages(2, 20)
+  },
+  {
+    id: 3,
+    title: "3주차",
+    description: "3주차 디자인 구체화 및 프로토타이핑 단계입니다.",
+    images: generateImages(3, 20)
+  },
+  {
+    id: 4,
+    title: "4주차",
+    description: "4주차 피드백 반영 및 디자인 고도화 단계입니다.",
+    images: generateImages(4, 20)
+  },
+  {
+    id: 5,
+    title: "5주차",
+    description: "5주차 최종 결과물 정리 및 아카이빙 단계입니다.",
+    images: generateImages(5, 20)
+  },
+  {
+    id: 6,
+    title: "6주차",
+    description: "6주차 프로젝트 마무리 및 회고 단계입니다.",
+    images: generateImages(6, 20)
+  }
+];
 
 export default function GradProj() {
   const [selectedWeek, setSelectedWeek] = useState<GradWeek | null>(null);
@@ -95,7 +130,14 @@ export default function GradProj() {
 
               <div className="grid grid-cols-1 gap-12 pt-12">
                 {selectedWeek.images.map((img, idx) => (
-                  <div key={idx} className="w-full rounded-[40px] overflow-hidden shadow-2xl bg-gray-50">
+                  <motion.div 
+                    key={idx} 
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1, duration: 0.8 }}
+                    className="w-full rounded-[40px] overflow-hidden shadow-2xl bg-gray-50"
+                  >
                     <img 
                       src={img} 
                       alt={`${selectedWeek.title} image ${idx + 1}`}
@@ -104,7 +146,7 @@ export default function GradProj() {
                         (e.target as HTMLImageElement).style.display = 'none';
                       }}
                     />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
