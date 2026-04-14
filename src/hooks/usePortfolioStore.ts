@@ -35,11 +35,6 @@ export function usePortfolioStore() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [gradProjPosts, setGradProjPosts] = useState<BlogPost[]>(() => {
-    const saved = localStorage.getItem("portfolio_gradproj");
-    return saved ? JSON.parse(saved) : [];
-  });
-
   useEffect(() => {
     localStorage.setItem("portfolio_works", JSON.stringify(works));
   }, [works]);
@@ -47,10 +42,6 @@ export function usePortfolioStore() {
   useEffect(() => {
     localStorage.setItem("portfolio_blog", JSON.stringify(blogPosts));
   }, [blogPosts]);
-
-  useEffect(() => {
-    localStorage.setItem("portfolio_gradproj", JSON.stringify(gradProjPosts));
-  }, [gradProjPosts]);
 
   const addWork = (work: Omit<WorkItem, "id">) => {
     const newWork = { ...work, id: Date.now().toString() };
@@ -74,25 +65,11 @@ export function usePortfolioStore() {
     setBlogPosts((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const addGradProjPost = (post: Omit<BlogPost, "id" | "date">) => {
-    const newPost = { 
-      ...post, 
-      id: Date.now().toString(),
-      date: new Date().toLocaleDateString()
-    };
-    setGradProjPosts((prev) => [newPost, ...prev]);
-  };
-
-  const deleteGradProjPost = (id: string) => {
-    setGradProjPosts((prev) => prev.filter((p) => p.id !== id));
-  };
-
   return { 
     works, addWork, deleteWork, 
     vinylAsset, 
     tapeAsset,
     profileImage,
-    blogPosts, addBlogPost, deleteBlogPost,
-    gradProjPosts, addGradProjPost, deleteGradProjPost
+    blogPosts, addBlogPost, deleteBlogPost
   };
 }
