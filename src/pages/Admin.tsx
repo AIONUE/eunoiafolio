@@ -14,14 +14,9 @@ export default function Admin() {
   const [blogContent, setBlogContent] = useState("");
   const [blogImage, setBlogImage] = useState("");
 
-  const [gradTitle, setGradTitle] = useState("");
-  const [gradContent, setGradContent] = useState("");
-  const [gradImage, setGradImage] = useState("");
-
   const { 
     works, addWork, deleteWork, 
-    blogPosts, addBlogPost, deleteBlogPost,
-    gradProjPosts, addGradProjPost, deleteGradProjPost
+    blogPosts, addBlogPost, deleteBlogPost
   } = usePortfolioStore();
 
   const handleLogin = (e: React.FormEvent) => {
@@ -65,22 +60,6 @@ export default function Admin() {
     alert("블로그 글이 등록되었습니다!");
   };
 
-  const handleGradUpload = () => {
-    if (!gradTitle || !gradContent) {
-      alert("제목과 내용을 입력해주세요.");
-      return;
-    }
-    addGradProjPost({
-      title: gradTitle,
-      content: gradContent,
-      image: gradImage,
-    });
-    setGradTitle("");
-    setGradContent("");
-    setGradImage("");
-    alert("졸업 작품이 등록되었습니다!");
-  };
-
   if (!isAuthorized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -121,48 +100,6 @@ export default function Admin() {
           >
             LOGOUT
           </button>
-        </div>
-
-        <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">
-          <h2 className="text-xl font-bold text-[#243397] mb-6">UPLOAD NEW GRADUATION PROJECT</h2>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Project Title</label>
-              <input 
-                type="text" 
-                value={gradTitle}
-                onChange={(e) => setGradTitle(e.target.value)}
-                placeholder="Project Title" 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Project Image URL (Optional)</label>
-              <input 
-                type="text" 
-                value={gradImage}
-                onChange={(e) => setGradImage(e.target.value)}
-                placeholder="https://..." 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-gray-400 uppercase">Content</label>
-              <textarea 
-                value={gradContent}
-                onChange={(e) => setGradContent(e.target.value)}
-                rows={6}
-                placeholder="Project Content" 
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-[#243397] resize-none"
-              />
-            </div>
-            <button 
-              onClick={handleGradUpload}
-              className="bg-[#243397] text-white px-8 py-3 rounded-lg font-bold hover:bg-[#243397]/90 transition-colors"
-            >
-              UPLOAD GRADUATION PROJECT
-            </button>
-          </div>
         </div>
 
         <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 mb-12">
@@ -250,29 +187,6 @@ export default function Admin() {
              >
                UPLOAD CONTENT
              </button>
-          </div>
-        </div>
-
-        <div className="space-y-6 mb-12">
-          <h2 className="text-xl font-bold text-[#243397]">MANAGE GRADUATION PROJECTS</h2>
-          <div className="grid grid-cols-1 gap-4">
-            {gradProjPosts.map((post) => (
-              <div key={post.id} className="bg-white p-4 rounded-xl border border-gray-100 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  {post.image && <img src={post.image} alt="" className="w-16 h-16 object-cover rounded-lg" />}
-                  <div>
-                    <h3 className="font-bold text-[#243397]">{post.title}</h3>
-                    <p className="text-xs text-gray-400 font-bold">{post.date}</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={() => deleteGradProjPost(post.id)}
-                  className="text-red-400 hover:text-red-600 font-bold text-sm"
-                >
-                  DELETE
-                </button>
-              </div>
-            ))}
           </div>
         </div>
 
