@@ -22,7 +22,7 @@ const GRAD_WEEKS = [
 const getImages = (weekId: number, count: number) => 
   Array.from({ length: count }, (_, j) => {
     const index = (j + 1).toString().padStart(2, '0');
-    return `/grad-proj/week${weekId}/week${weekId}_${index}.png`;
+    return `grad-proj/week${weekId}/week${weekId}_${index}.png`;
   });
 
 export default function GradProj() {
@@ -40,7 +40,6 @@ export default function GradProj() {
                   src={getImages(week.id, week.imageCount)[0]} 
                   alt={week.title} 
                   className="w-full h-64 object-cover"
-                  onError={(e) => { (e.target as HTMLImageElement).src = '/fallback.png'; }} 
                 />
                 <h3 className="text-xl font-bold mt-4">{week.title}</h3>
               </div>
