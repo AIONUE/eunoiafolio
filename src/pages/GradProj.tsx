@@ -35,7 +35,6 @@ export default function GradProj() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {GRAD_WEEKS.map((week) => (
               <div key={week.id} onClick={() => setSelectedWeek(week)} className="cursor-pointer">
-                {/* 사진이 없으면 대체 이미지를 보여주도록 개선 */}
                 <img 
                   src={getImages(week.id, week.imageCount)[0]} 
                   alt={week.title} 
@@ -48,8 +47,8 @@ export default function GradProj() {
         ) : (
           <div>
             <button onClick={() => setSelectedWeek(null)}>← BACK TO LIST</button>
-            <h1 className="text-4xl font-bold">{selectedWeek.title}</h1>
-            <div className="grid grid-cols-3 gap-4 mt-8">
+            <h1 className="text-4xl font-bold mb-8">{selectedWeek.title}</h1>
+            <div className="flex flex-col gap-4 mt-8">
               {getImages(selectedWeek.id, selectedWeek.imageCount).map((src, idx) => (
                 <img key={idx} src={src} alt={`${selectedWeek.title} ${idx}`} />
               ))}
