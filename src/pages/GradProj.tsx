@@ -18,15 +18,16 @@ const GRAD_WEEKS = [
   { id: 6, title: "6주차", description: "6주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
 ];
 
-const getImages = (week: any) => 
-  Array.from({ length: week.imageCount }, (_, j) => {
+const getImages = (week: any) => {
+  return Array.from({ length: week.imageCount }, (_, j) => {
     const index = (j + 1).toString().padStart(2, '0');
     return `/grad-proj/week${week.id}/week${week.id}_${index}.png`;
   });
-});
+};
 
 export default function GradProj() {
   const [selectedWeek, setSelectedWeek] = useState<GradWeek | null>(null);
+  }
 
   return (
     <div className="pt-32 pb-24 px-8 bg-white min-h-screen">
