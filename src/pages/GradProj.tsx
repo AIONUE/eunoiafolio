@@ -11,11 +11,11 @@ interface GradWeek {
 
 const GRAD_WEEKS = [
   { id: 1, title: "1주차", description: "1주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 13 },
-  { id: 2, title: "2주차", description: "2주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
-  { id: 3, title: "3주차", description: "3주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
-  { id: 4, title: "4주차", description: "4주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
-  { id: 5, title: "5주차", description: "5주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
-  { id: 6, title: "6주차", description: "6주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 5 },
+  { id: 2, title: "2주차", description: "2주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 8 },
+  { id: 3, title: "3주차", description: "3주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 11 },
+  { id: 4, title: "4주차", description: "4주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 11 },
+  { id: 5, title: "5주차", description: "5주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 13 },
+  { id: 6, title: "6주차", description: "6주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 8 },
 ];
 
 // 이미지를 생성하는 유틸리티 함수
@@ -45,7 +45,7 @@ export default function GradProj() {
             ))}
           </div>
         ) : (
-          <div>
+          <div className="space-y-12">
             <button onClick={() => setSelectedWeek(null)}>← BACK TO LIST</button>
             <h1 className="text-4xl font-bold mb-8">{selectedWeek.title}</h1>
             <div className="flex flex-col gap-4 mt-8">
