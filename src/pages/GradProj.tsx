@@ -21,7 +21,7 @@ const GRAD_WEEKS = [
 const getImages = (week: any) => {
   return Array.from({ length: week.imageCount }, (_, j) => {
     const index = (j + 1).toString().padStart(2, '0');
-    return `/grad-proj/week${week.id}/week${week.id}_${index}.png`;
+    return `grad-proj/week${week.id}/week${week.id}_${index}.png`;
   });
 };
 
