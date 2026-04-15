@@ -26,8 +26,8 @@ const getImages = (week: any) => {
 };
 
 export default function GradProj() {
-  const [selectedWeek, setSelectedWeek] = useState<GradWeek | null>(null);
-  }
+  const [selectedWeek, setSelectedWeek] = useState(null);
+
 
   return (
     <div className="pt-32 pb-24 px-8 bg-white min-h-screen">
