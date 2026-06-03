@@ -20,6 +20,9 @@ const GRAD_WEEKS = [
   { id: 9, title: "9주차", description: "9주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 25 },
   { id: 10, title: "10주차", description: "10주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 19 },
   { id: 11, title: "11주차", description: "11주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 29 },
+  { id: 12, title: "12주차", description: "12주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 22 },
+  { id: 13, title: "13주차", description: "13주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 14 },
+  { id: 14, title: "14주차", description: "14주차 진행 과정 및 결과물 아카이브입니다.", imageCount: 16 },
 ];
 
 // 이미지를 생성하는 유틸리티 함수
